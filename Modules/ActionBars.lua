@@ -80,11 +80,6 @@ function ActionBars:UpdateBar(index, settings)
     elseif bar.SetBackdrop then
         bar:SetBackdrop({ bgFile = "Interface\\Tooltips\\UI-Tooltip-Background" })
     end
-    print("ZulgAurasUI: Updated ActionBar " .. index ..
-          " (scale=" .. (settings.scale or 1) ..
-          ", alpha=" .. (settings.alpha or 1) ..
-          ", xOffset=" .. (settings.xOffset or 0) ..
-          ", yOffset=" .. (settings.yOffset or ((index - 1) * 50)) .. ")")
 end
 
 return ActionBars

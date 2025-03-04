@@ -45,7 +45,6 @@ function XPBar:OnInitialize()
         local point, _, _, xOfs, yOfs = self:GetPoint()
         ZA.db.profile.xpBar.xOffset = xOfs
         ZA.db.profile.xpBar.yOffset = yOfs
-        print("ZulgAurasUI: XPBar position saved (xOffset=" .. xOfs .. ", yOffset=" .. yOfs .. ")")
     end)
     
     -- Register events to update the XP bar
@@ -83,10 +82,6 @@ function XPBar:UpdateBar(settings)
             self.frame:SetPoint("CENTER", UIParent, "CENTER", settings.xOffset, settings.yOffset)
         end
         
-        print("ZulgAurasUI: Updated XPBar (scale=" .. (settings.scale or 1) .. 
-              ", alpha=" .. (settings.alpha or 1) .. 
-              ", xOffset=" .. (settings.xOffset or 0) .. 
-              ", yOffset=" .. (settings.yOffset or -200) .. ")")
     end
 end
 

@@ -52,7 +52,6 @@ function BagBar:OnInitialize()
         local point, _, _, xOfs, yOfs = self:GetPoint()
         ZA.db.profile.bagBar.xOffset = xOfs
         ZA.db.profile.bagBar.yOffset = yOfs
-        print("ZulgAurasUI: BagBar position saved (xOffset=" .. xOfs .. ", yOffset=" .. yOfs .. ")")
     end)
     
     print("ZulgAurasUI: BagBar module initialized.")
@@ -162,16 +161,7 @@ function BagBar:UpdateBar(settings)
         self.frame:SetScale(settings.scale or 1)
         self.frame:SetAlpha(settings.alpha or 1)
         
-        -- Update position if provided
-        if settings.xOffset ~= nil and settings.yOffset ~= nil then
-            self.frame:ClearAllPoints()
-            self.frame:SetPoint("CENTER", UIParent, "CENTER", settings.xOffset, settings.yOffset)
-        end
-        
-        print("ZulgAurasUI: Updated BagBar (scale=" .. (settings.scale or 1) .. 
-              ", alpha=" .. (settings.alpha or 1) .. 
-              ", xOffset=" .. (settings.xOffset or 0) .. 
-              ", yOffset=" .. (settings.yOffset or -250) .. ")")
+
     end
 end
 

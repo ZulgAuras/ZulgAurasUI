@@ -45,7 +45,6 @@ function RepBar:OnInitialize()
         local point, _, _, xOfs, yOfs = self:GetPoint()
         ZA.db.profile.repBar.xOffset = xOfs
         ZA.db.profile.repBar.yOffset = yOfs
-        print("ZulgAurasUI: RepBar position saved (xOffset=" .. xOfs .. ", yOffset=" .. yOfs .. ")")
     end)
     
     -- Register events to update the reputation bar
@@ -109,11 +108,7 @@ function RepBar:UpdateBar(settings)
             self.frame:ClearAllPoints()
             self.frame:SetPoint("CENTER", UIParent, "CENTER", settings.xOffset, settings.yOffset)
         end
-        
-        print("ZulgAurasUI: Updated RepBar (scale=" .. (settings.scale or 1) .. 
-              ", alpha=" .. (settings.alpha or 1) .. 
-              ", xOffset=" .. (settings.xOffset or 0) .. 
-              ", yOffset=" .. (settings.yOffset or -300) .. ")")
+
     end
 end
 
