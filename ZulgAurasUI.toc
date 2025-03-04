@@ -1,33 +1,30 @@
 ## Interface: 11506
-## Title: ZulgAurasUI
-## Notes: A lightweight, customizable UI addon for WoW Classic
+## Title: |cff0066ffZulgAuras|rUI
 ## Author: ZulgAuras
-## Version: 1.0.0
+## Version: 1.0
+## Notes: A lightweight, customizable UI addon for WoW Classic Era and Season of Discovery.
 ## SavedVariables: ZulgAurasUIDB
+## OptionalDeps: Ace3
 
-# External Libraries
+# Libs
 Libs\LibStub\LibStub.lua
 Libs\CallbackHandler-1.0\CallbackHandler-1.0.lua
-
-# Ace3 Libraries
 Libs\AceAddon-3.0\AceAddon-3.0.lua
+Libs\AceConsole-3.0\AceConsole-3.0.lua
 Libs\AceEvent-3.0\AceEvent-3.0.lua
 Libs\AceHook-3.0\AceHook-3.0.lua
 Libs\AceDB-3.0\AceDB-3.0.lua
+Libs\AceDBOptions-3.0\AceDBOptions-3.0.xml
 Libs\AceGUI-3.0\AceGUI-3.0.xml
 Libs\AceConfig-3.0\AceConfig-3.0.xml
-Libs\AceConfigDialog-3.0\AceConfigDialog-3.0.xml
-Libs\AceConsole-3.0\AceConsole-3.0.lua
-Libs\LibSharedMedia-3.0\LibSharedMedia-3.0.lua
 
-# Core files
-Core\Constants.lua
-Core\Init.lua
-Core\Config.lua
+# Core
+ZulgAurasUI.lua
+
 
 # Modules
-Modules\UnitFrames\UnitFrames.lua
-Modules\ActionBars\ActionBars.lua
-Modules\Buffs\Buffs.lua
-Modules\Minimap\Minimap.lua
-Modules\Chat\Chat.lua
+Modules\ActionBars.lua
+Modules\XPBar.lua
+Modules\BagBar.lua
+Modules\RepBar.lua
+Settings.lua
