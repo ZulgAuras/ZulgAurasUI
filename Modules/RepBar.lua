@@ -12,16 +12,11 @@ function RepBar:OnInitialize()
     local xOffset = ZA.db.profile.repBar.xOffset or 0
     local yOffset = ZA.db.profile.repBar.yOffset or -300
     self.frame:SetPoint("CENTER", UIParent, "CENTER", xOffset, yOffset)
-    
-    if self.frame.SetBackdrop then
-        self.frame:SetBackdrop({
-            bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
-            edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
-            edgeSize = 16,
-        })
-        self.frame:SetBackdropColor(0, 0, 0, 0.7)
-        self.frame:SetBackdropBorderColor(0, 0, 0, 1)
-    end
+
+    -- Create background
+    self.background = self.frame:CreateTexture(nil, "BACKGROUND")
+    self.background:SetAllPoints()
+    self.background:SetColorTexture(0, 0, 0, 0.7) -- Adjust color and alpha as needed
     
     -- Create reputation bar
     self.repBar = CreateFrame("StatusBar", nil, self.frame)

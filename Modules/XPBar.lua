@@ -13,15 +13,10 @@ function XPBar:OnInitialize()
     local yOffset = ZA.db.profile.xpBar.yOffset or -200
     self.frame:SetPoint("CENTER", UIParent, "CENTER", xOffset, yOffset)
     
-    if self.frame.SetBackdrop then
-        self.frame:SetBackdrop({
-            bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
-            edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
-            edgeSize = 16,
-        })
-        self.frame:SetBackdropColor(0, 0, 0, 0.7)
-        self.frame:SetBackdropBorderColor(0, 0, 0, 1)
-    end
+    -- Create background
+    self.background = self.frame:CreateTexture(nil, "BACKGROUND")
+    self.background:SetAllPoints()
+    self.background:SetColorTexture(0, 0, 0, 0.7) -- Adjust color and alpha as needed
     
     -- Create actual XP bar
     self.xpBar = CreateFrame("StatusBar", nil, self.frame)
