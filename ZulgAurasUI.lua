@@ -38,25 +38,25 @@ function ZA:HideBlizzardUI()
         end
     end
 
-    if MultiBarBottomLeft then MultiBarBottomLeft:Hide() end
-    if MultiBarBottomRight then MultiBarBottomRight:Hide() end
-    if MultiBarLeft then MultiBarLeft:Hide() end
-    if MultiBarRight then MultiBarRight:Hide() end
+    if _G["MultiBarBottomLeft"] then _G["MultiBarBottomLeft"]:Hide() end
+    if _G["MultiBarBottomRight"] then _G["MultiBarBottomRight"]:Hide() end
+    if _G["MultiBarLeft"] then _G["MultiBarLeft"]:Hide() end
+    if _G["MultiBarRight"] then _G["MultiBarRight"]:Hide() end
 
-    if MainMenuBar then
-        MainMenuBar:Hide()
-        MainMenuBar:UnregisterAllEvents()
+    if _G["MainMenuBar"] then
+        _G["MainMenuBar"]:Hide()
+        _G["MainMenuBar"]:UnregisterAllEvents()
     end
 
-    if MainMenuBarArtFrame then
-        MainMenuBarArtFrame:Hide()
-        if MainMenuBarArtFrame.LeftEndCap then MainMenuBarArtFrame.LeftEndCap:Hide() end
-        if MainMenuBarArtFrame.RightEndCap then MainMenuBarArtFrame.RightEndCap:Hide() end
+    if _G["MainMenuBarArtFrame"] then
+        _G["MainMenuBarArtFrame"]:Hide()
+        if _G["MainMenuBarArtFrame"].LeftEndCap then _G["MainMenuBarArtFrame"].LeftEndCap:Hide() end
+        if _G["MainMenuBarArtFrame"].RightEndCap then _G["MainMenuBarArtFrame"].RightEndCap:Hide() end
     end
 
-    if MainMenuBarBackpackButton then
-        MainMenuBarBackpackButton:Hide()
-        MainMenuBarBackpackButton:UnregisterAllEvents()
+    if _G["MainMenuBarBackpackButton"] then
+        _G["MainMenuBarBackpackButton"]:Hide()
+        _G["MainMenuBarBackpackButton"]:UnregisterAllEvents()
     end
     for i = 0, 3 do
         local bagButton = _G["CharacterBag" .. i .. "Slot"]
@@ -66,25 +66,25 @@ function ZA:HideBlizzardUI()
         end
     end
 
-    if MainMenuExpBar then
-        MainMenuExpBar:Hide()
-        MainMenuExpBar:UnregisterAllEvents()
+    if _G["MainMenuExpBar"] then
+        _G["MainMenuExpBar"]:Hide()
+        _G["MainMenuExpBar"]:UnregisterAllEvents()
     end
 
-    if ReputationWatchBar then
-        ReputationWatchBar:Hide()
-        ReputationWatchBar:UnregisterAllEvents()
+    if _G["ReputationWatchBar"] then
+        _G["ReputationWatchBar"]:Hide()
+        _G["ReputationWatchBar"]:UnregisterAllEvents()
     end
 
-    if CharacterMicroButton then CharacterMicroButton:Hide() end
-    if SpellbookMicroButton then SpellbookMicroButton:Hide() end
-    if TalentMicroButton then TalentMicroButton:Hide() end
-    if QuestLogMicroButton then QuestLogMicroButton:Hide() end
-    if SocialsMicroButton then SocialsMicroButton:Hide() end
-    if LFGMicroButton then LFGMicroButton:Hide() end
-    if MainMenuMicroButton then MainMenuMicroButton:Hide() end
-    if HelpMicroButton then HelpMicroButton:Hide() end
-    if MainMenuBarPerformanceBar then MainMenuBarPerformanceBar:Hide() end
+    if _G["CharacterMicroButton"] then _G["CharacterMicroButton"]:Hide() end
+    if _G["SpellbookMicroButton"] then _G["SpellbookMicroButton"]:Hide() end
+    if _G["TalentMicroButton"] then _G["TalentMicroButton"]:Hide() end
+    if _G["QuestLogMicroButton"] then _G["QuestLogMicroButton"]:Hide() end
+    if _G["SocialsMicroButton"] then _G["SocialsMicroButton"]:Hide() end
+    if _G["LFGMicroButton"] then _G["LFGMicroButton"]:Hide() end
+    if _G["MainMenuMicroButton"] then _G["MainMenuMicroButton"]:Hide() end
+    if _G["HelpMicroButton"] then _G["HelpMicroButton"]:Hide() end
+    if _G["MainMenuBarPerformanceBar"] then _G["MainMenuBarPerformanceBar"]:Hide() end
 end
 
 function ZA:SetupModules()
@@ -101,8 +101,8 @@ function ZA:SetupLDB()
         icon = "Interface\\Icons\\Ability_Warrior_BattleShout",
         OnClick = function(_, msg)
             if msg == "LeftButton" then
-                if InterfaceOptionsFrame then
-                    InterfaceOptionsFrame:Show()
+                if _G["InterfaceOptionsFrame"] then
+                    _G["InterfaceOptionsFrame"]:Show()
                     LibStub("AceConfigDialog-3.0"):Open("ZulgAurasUI")
                 else
                     print("Interface options frame is not available.")

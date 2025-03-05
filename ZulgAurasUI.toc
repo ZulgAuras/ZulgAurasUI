@@ -17,6 +17,7 @@ Libs\AceDB-3.0\AceDB-3.0.lua
 Libs\AceDBOptions-3.0\AceDBOptions-3.0.xml
 Libs\AceGUI-3.0\AceGUI-3.0.xml
 Libs\AceConfig-3.0\AceConfig-3.0.xml
+Libs\LibWindow-1.1\LibWindow-1.1.lua
 
 # Core
 ZulgAurasUI.lua
