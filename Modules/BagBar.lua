@@ -161,7 +161,13 @@ function BagBar:UpdateBar(settings)
         self.frame:SetScale(settings.scale or 1)
         self.frame:SetAlpha(settings.alpha or 1)
         
-
+        local point, relativeTo, relativePoint, _, _ = self.frame:GetPoint(1)
+        if point and relativeTo and relativePoint then
+            local xOffset = settings.xOffset or 0
+            local yOffset = settings.yOffset or -250
+            self.frame:ClearAllPoints()
+            self.frame:SetPoint(point, relativeTo, relativePoint, xOffset, yOffset)
+        end
     end
 end
 

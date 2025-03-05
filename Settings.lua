@@ -31,46 +31,49 @@ local function InitializeDefaults()
   -- ActionBars defaults (for bars 1 through 5)
   ZA.db.profile.actionBars = ZA.db.profile.actionBars or {}
   for i = 1, 5 do
-    ZA.db.profile.actionBars[i] = ZA.db.profile.actionBars[i] or {
-      scale = 1,
-      alpha = 1,
-      xOffset = 0,
-      yOffset = (i - 1) * 50,
-      visible = true,
-      border = true,
-      borderColor = {0, 0, 0, 1},
-    }
+    if not ZA.db.profile.actionBars[i] then
+      ZA.db.profile.actionBars[i] = {}
+    end
+    local barSettings = ZA.db.profile.actionBars[i]
+    barSettings.scale = barSettings.scale or 1
+    barSettings.alpha = barSettings.alpha or 1
+    barSettings.xOffset = barSettings.xOffset or 0
+    barSettings.yOffset = barSettings.yOffset or ((i - 1) * 50)
+    barSettings.visible = barSettings.visible or true
+    barSettings.border = barSettings.border or true
+    barSettings.borderColor = barSettings.borderColor or {0, 0, 0, 1}
   end
 
   -- XPBar, BagBar, RepBar defaults
-  ZA.db.profile.xpBar = ZA.db.profile.xpBar or { scale = 1, alpha = 1 }
-  ZA.db.profile.bagBar = ZA.db.profile.bagBar or { scale = 1, alpha = 1 }
-  ZA.db.profile.repBar = ZA.db.profile.repBar or { scale = 1, alpha = 1 }
-  
-  print("ZulgAurasUI: Defaults initialized.")
+  ZA.db.profile.xpBar = ZA.db.profile.xpBar or { scale = 1, alpha = 1, xOffset = 0, yOffset = -200 }
+  ZA.db.profile.bagBar = ZA.db.profile.bagBar or { scale = 1, alpha = 1, xOffset = 0, yOffset = -250 }
+  ZA.db.profile.repBar = ZA.db.profile.repBar or { scale = 1, alpha = 1, xOffset = 0, yOffset = -300 }
 end
 
 local currentAB = 1  -- currently selected ActionBar index
 
--- This function creates the content (the sliders and checkboxes) for a given module category
--- and places it in the provided parent container.
-local function CreateContentGroup(category, parent)
+-- This function creates the dynamic content for a given module category.
+-- It only clears the dynamic content container so the persistent tab control remains.
+local function CreateContentGroup(category, contentContainer)
+  contentContainer:ReleaseChildren() -- Clear previous dynamic content.
   local group = AceGUI:Create("InlineGroup")
   group:SetFullWidth(true)
   group:SetLayout("Flow")
   
   if category == "actionBars" then
-    group:SetTitle("Action Bars - |cff0066ffZulgAuras|rUI")
+    group:SetTitle("Action Bars")
     -- Dropdown for selecting which ActionBar to adjust.
     local dropdown = AceGUI:Create("Dropdown")
     dropdown:SetLabel("Choose Action Bar")
     local list = {}
-    for i = 1, 5 do list[tostring(i)] = "Action Bar " .. i end
+    for i = 1, 5 do 
+      list[tostring(i)] = "Action Bar " .. i 
+    end
     dropdown:SetList(list)
     dropdown:SetValue(tostring(currentAB))
     dropdown:SetCallback("OnValueChanged", function(widget, event, value)
       currentAB = tonumber(value)
-      CreateContentGroup("actionBars", parent)
+      CreateContentGroup("actionBars", contentContainer)
     end)
     group:AddChild(dropdown)
     
@@ -78,7 +81,8 @@ local function CreateContentGroup(category, parent)
     -- Slider: Scale
     local scaleSlider = AceGUI:Create("Slider")
     scaleSlider:SetLabel("Scale")
-    scaleSlider:SetValue(abSettings.scale)
+   	local scaleValue = (type(abSettings.scale) == "number") and abSettings.scale or 1
+    scaleSlider:SetValue(scaleValue)
     scaleSlider:SetSliderValues(0.5, 2.0, 0.1)
     scaleSlider:SetFullWidth(true)
     scaleSlider:SetCallback("OnValueChanged", function(widget, event, val)
@@ -92,7 +96,8 @@ local function CreateContentGroup(category, parent)
     -- Slider: Opacity
     local alphaSlider = AceGUI:Create("Slider")
     alphaSlider:SetLabel("Opacity")
-    alphaSlider:SetValue(abSettings.alpha)
+    local alphaValue = (type(abSettings.alpha) == "number") and abSettings.alpha or 1
+    alphaSlider:SetValue(alphaValue)
     alphaSlider:SetSliderValues(0.1, 1.0, 0.1)
     alphaSlider:SetFullWidth(true)
     alphaSlider:SetCallback("OnValueChanged", function(widget, event, val)
@@ -106,7 +111,8 @@ local function CreateContentGroup(category, parent)
     -- Slider: X Offset
     local xOffsetSlider = AceGUI:Create("Slider")
     xOffsetSlider:SetLabel("X Offset")
-    xOffsetSlider:SetValue(abSettings.xOffset)
+    local xOffsetValue = (type(abSettings.xOffset) == "number") and abSettings.xOffset or 0
+    xOffsetSlider:SetValue(xOffsetValue)
     xOffsetSlider:SetSliderValues(-200, 200, 1)
     xOffsetSlider:SetFullWidth(true)
     xOffsetSlider:SetCallback("OnValueChanged", function(widget, event, val)
@@ -120,7 +126,8 @@ local function CreateContentGroup(category, parent)
     -- Slider: Y Offset
     local yOffsetSlider = AceGUI:Create("Slider")
     yOffsetSlider:SetLabel("Y Offset")
-    yOffsetSlider:SetValue(abSettings.yOffset)
+    local yOffsetValue = (type(abSettings.yOffset) == "number") and abSettings.yOffset or ((currentAB - 1) * 50)
+    yOffsetSlider:SetValue(yOffsetValue)
     yOffsetSlider:SetSliderValues(-200, 200, 1)
     yOffsetSlider:SetFullWidth(true)
     yOffsetSlider:SetCallback("OnValueChanged", function(widget, event, val)
@@ -188,115 +195,140 @@ local function CreateContentGroup(category, parent)
     group:AddChild(borderColorPicker)
     
   elseif category == "xpBar" then
-    group:SetTitle("|cff0066ffZulgAuras|rUI XP Bar")
+    group:SetTitle("XP Bar")
+    -- Slider: Scale
     local scaleSlider = AceGUI:Create("Slider")
     scaleSlider:SetLabel("Scale")
-    scaleSlider:SetValue(ZA.db.profile.xpBar.scale)
+    local xpScale = (type(ZA.db.profile.xpBar.scale) == "number") and ZA.db.profile.xpBar.scale or 1
+    scaleSlider:SetValue(xpScale)
     scaleSlider:SetSliderValues(0.5, 2.0, 0.1)
     scaleSlider:SetFullWidth(true)
     scaleSlider:SetCallback("OnValueChanged", function(widget, event, val)
       ZA.db.profile.xpBar.scale = val
       if XPBarModule and XPBarModule.UpdateBar then
-        XPBarModule:UpdateBar(val, ZA.db.profile.xpBar.alpha)
+        XPBarModule:UpdateBar(ZA.db.profile.xpBar)
       end
     end)
     group:AddChild(scaleSlider)
     
+    -- Slider: Opacity
     local alphaSlider = AceGUI:Create("Slider")
     alphaSlider:SetLabel("Opacity")
-    alphaSlider:SetValue(ZA.db.profile.xpBar.alpha)
+    local xpAlpha = (type(ZA.db.profile.xpBar.alpha) == "number") and ZA.db.profile.xpBar.alpha or 1
+    alphaSlider:SetValue(xpAlpha)
     alphaSlider:SetSliderValues(0.1, 1.0, 0.1)
     alphaSlider:SetFullWidth(true)
     alphaSlider:SetCallback("OnValueChanged", function(widget, event, val)
       ZA.db.profile.xpBar.alpha = val
       if XPBarModule and XPBarModule.UpdateBar then
-        XPBarModule:UpdateBar(ZA.db.profile.xpBar.scale, val)
+        XPBarModule:UpdateBar(ZA.db.profile.xpBar)
       end
     end)
     group:AddChild(alphaSlider)
     
   elseif category == "bagBar" then
-    group:SetTitle("|cff0066ffZulgAuras|rUI Bag Bar")
+    group:SetTitle("Bag Bar")
+    -- Slider: Scale
     local scaleSlider = AceGUI:Create("Slider")
     scaleSlider:SetLabel("Scale")
-    scaleSlider:SetValue(ZA.db.profile.bagBar.scale)
+    local bagScale = (type(ZA.db.profile.bagBar.scale) == "number") and ZA.db.profile.bagBar.scale or 1
+    scaleSlider:SetValue(bagScale)
     scaleSlider:SetSliderValues(0.5, 2.0, 0.1)
     scaleSlider:SetFullWidth(true)
     scaleSlider:SetCallback("OnValueChanged", function(widget, event, val)
       ZA.db.profile.bagBar.scale = val
       if BagBarModule and BagBarModule.UpdateBar then
-        BagBarModule:UpdateBar(val, ZA.db.profile.bagBar.alpha)
+        BagBarModule:UpdateBar(ZA.db.profile.bagBar)
       end
     end)
     group:AddChild(scaleSlider)
     
+    -- Slider: Opacity
     local alphaSlider = AceGUI:Create("Slider")
     alphaSlider:SetLabel("Opacity")
-    alphaSlider:SetValue(ZA.db.profile.bagBar.alpha)
+    local bagAlpha = (type(ZA.db.profile.bagBar.alpha) == "number") and ZA.db.profile.bagBar.alpha or 1
+    alphaSlider:SetValue(bagAlpha)
     alphaSlider:SetSliderValues(0.1, 1.0, 0.1)
     alphaSlider:SetFullWidth(true)
     alphaSlider:SetCallback("OnValueChanged", function(widget, event, val)
       ZA.db.profile.bagBar.alpha = val
       if BagBarModule and BagBarModule.UpdateBar then
-        BagBarModule:UpdateBar(ZA.db.profile.bagBar.scale, val)
+        BagBarModule:UpdateBar(ZA.db.profile.bagBar)
       end
     end)
     group:AddChild(alphaSlider)
     
   elseif category == "repBar" then
-    group:SetTitle("|cff0066ffZulgAuras|rUI Rep Bar")
+    group:SetTitle("Rep Bar")
+    -- Slider: Scale
     local scaleSlider = AceGUI:Create("Slider")
     scaleSlider:SetLabel("Scale")
-    scaleSlider:SetValue(ZA.db.profile.repBar.scale)
+    local repScale = (type(ZA.db.profile.repBar.scale) == "number") and ZA.db.profile.repBar.scale or 1
+    scaleSlider:SetValue(repScale)
     scaleSlider:SetSliderValues(0.5, 2.0, 0.1)
     scaleSlider:SetFullWidth(true)
     scaleSlider:SetCallback("OnValueChanged", function(widget, event, val)
       ZA.db.profile.repBar.scale = val
       if RepBarModule and RepBarModule.UpdateBar then
-        RepBarModule:UpdateBar(val, ZA.db.profile.repBar.alpha)
+        RepBarModule:UpdateBar(ZA.db.profile.repBar)
       end
     end)
     group:AddChild(scaleSlider)
     
+    -- Slider: Opacity
     local alphaSlider = AceGUI:Create("Slider")
     alphaSlider:SetLabel("Opacity")
-    alphaSlider:SetValue(ZA.db.profile.repBar.alpha)
+    local repAlpha = (type(ZA.db.profile.repBar.alpha) == "number") and ZA.db.profile.repBar.alpha or 1
+    alphaSlider:SetValue(repAlpha)
     alphaSlider:SetSliderValues(0.1, 1.0, 0.1)
     alphaSlider:SetFullWidth(true)
     alphaSlider:SetCallback("OnValueChanged", function(widget, event, val)
       ZA.db.profile.repBar.alpha = val
       if RepBarModule and RepBarModule.UpdateBar then
-        RepBarModule:UpdateBar(ZA.db.profile.repBar.scale, val)
+        RepBarModule:UpdateBar(ZA.db.profile.repBar)
       end
     end)
     group:AddChild(alphaSlider)
     
   elseif category == "profiles" then
-    group:SetTitle("|cff0066ffZulgAuras|rUI Profiles")
+    group:SetTitle("Profiles")
     local label = AceGUI:Create("Label")
     label:SetText("Use /zulgaprofiles to manage profiles.")
     group:AddChild(label)
   end
 
-  parent:ReleaseChildren() -- Clear previous content.
-  parent:AddChild(group)
+  contentContainer:AddChild(group)
 end
 
--- Create the main settings window with persistent tab and content areas.
+-- Create the main settings window with persistent tab controls and a separate content container.
 local function CreateSettingsWindow()
   local frame = AceGUI:Create("Frame")
-  frame:SetTitle("|cff0066ffZulgAuras|rUI Advanced Settings")
+  frame:SetTitle("ZulgAurasUI Advanced Settings")
   frame:SetStatusText("Configure your UI modules")
   frame:SetLayout("Flow")
   frame:SetWidth(520)
   frame:SetHeight(600)
   frame.frame:SetPoint("CENTER", UIParent, "CENTER")
 
-  local container = AceGUI:Create("SimpleGroup")
-  container:SetLayout("Flow")
-  container:SetFullWidth(true)
-  container:SetFullHeight(true)
-  frame:AddChild(container)
+  local mainContainer = AceGUI:Create("SimpleGroup")
+  mainContainer:SetLayout("List")
+  mainContainer:SetFullWidth(true)
+  mainContainer:SetFullHeight(true)
+  frame:AddChild(mainContainer)
+
+  -- Create a persistent container for the tab group.
+  local tabContainer = AceGUI:Create("SimpleGroup")
+  tabContainer:SetLayout("Flow")
+  tabContainer:SetFullWidth(true)
+  tabContainer:SetFullHeight(false)
+  mainContainer:AddChild(tabContainer)
+
+  -- Create a separate container for dynamic content.
+  local contentContainer = AceGUI:Create("SimpleGroup")
+  contentContainer:SetLayout("Flow")
+  contentContainer:SetFullWidth(true)
+  contentContainer:SetFullHeight(true)
+  mainContainer:AddChild(contentContainer)
 
   local tabGroup = AceGUI:Create("TabGroup")
   tabGroup:SetLayout("Flow")
@@ -311,9 +343,9 @@ local function CreateSettingsWindow()
   }
   tabGroup:SetTabs(tabs)
   tabGroup:SetCallback("OnGroupSelected", function(self, event, group)
-    CreateContentGroup(group, container)
+    CreateContentGroup(group, contentContainer)
   end)
-  container:AddChild(tabGroup)
+  tabContainer:AddChild(tabGroup)
   tabGroup:SelectTab("actionBars")
 
   return frame
