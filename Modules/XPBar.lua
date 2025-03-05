@@ -39,12 +39,12 @@ function XPBar:OnInitialize()
     self.frame:EnableMouse(true)
     self.frame:RegisterForDrag("LeftButton")
     self.frame:SetScript("OnDragStart", function(self) self:StartMoving() end)
-    self.frame:SetScript("OnDragStop", function(self) 
+    self.frame:SetScript("OnDragStop", function(self)
         self:StopMovingOrSizing()
         -- Save the new position
         local point, _, _, xOfs, yOfs = self:GetPoint()
         ZA.db.profile.xpBar.xOffset = xOfs
-        ZA.db.profile.xpBar.yOffset = yOfs
+        ZA.db.profile.xpBar.yOfs = yOfs
     end)
     
     -- Register events to update the XP bar
@@ -57,6 +57,7 @@ end
 function XPBar:OnEnable()
     self.frame:Show()
     self:UpdateXP()
+    self:HideBlizzardBars(true)
     print("ZulgAurasUI: XPBar module enabled.")
 end
 
@@ -69,6 +70,9 @@ function XPBar:UpdateXP()
     
     local percentXP = math.floor((currXP / maxXP) * 100)
     self.xpText:SetText(percentXP .. "% (" .. currXP .. "/" .. maxXP .. ")")
+
+    -- Ensure Blizzard bars are hidden
+    self:HideBlizzardBars(true)
 end
 
 function XPBar:UpdateBar(settings)
@@ -85,6 +89,52 @@ function XPBar:UpdateBar(settings)
             local yOffset = settings.yOffset or 0
             self.frame:ClearAllPoints()
             self.frame:SetPoint(point, relativeTo, relativePoint, xOffset, yOffset)
+        end
+    end
+end
+
+function XPBar:HideBlizzardBars(firstTime)
+    if ReputationWatchBar then
+        ReputationWatchBar:Hide()
+        if ReputationWatchBar.UnregisterAllEvents then
+            ReputationWatchBar:UnregisterAllEvents()
+        end
+        ReputationWatchBar.Show = function() end
+        if firstTime then
+            ReputationWatchBar:HookScript("OnShow", ReputationWatchBar.Hide)
+        end
+    end
+    if MainMenuExpBar then
+        MainMenuExpBar:Hide()
+        if MainMenuExpBar.UnregisterAllEvents then
+            MainMenuExpBar:UnregisterAllEvents()
+        end
+        MainMenuExpBar.Show = function() end
+        if firstTime then
+            MainMenuExpBar:HookScript("OnShow", MainMenuExpBar.Hide)
+        end
+    end
+    if MainMenuBarMaxLevelBar then
+        MainMenuBarMaxLevelBar:Hide()
+        if MainMenuBarMaxLevelBar.UnregisterAllEvents then
+            MainMenuBarMaxLevelBar:UnregisterAllEvents()
+        end
+        MainMenuBarMaxLevelBar.Show = function() end
+        if firstTime then
+            MainMenuBarMaxLevelBar:HookScript("OnShow", MainMenuBarMaxLevelBar.Hide)
+        end
+    end
+    for i = 0, 3 do
+        local maxLevelBar = _G["MainMenuMaxLevelBar" .. i]
+        if maxLevelBar then
+            maxLevelBar:Hide()
+            if maxLevelBar.UnregisterAllEvents then
+                maxLevelBar:UnregisterAllEvents()
+            end
+            maxLevelBar.Show = function() end
+            if firstTime then
+                maxLevelBar:HookScript("OnShow", maxLevelBar.Hide)
+            end
         end
     end
 end

@@ -293,7 +293,7 @@ local function CreateContentGroup(category, contentContainer)
   elseif category == "profiles" then
     group:SetTitle("Profiles")
     local label = AceGUI:Create("Label")
-    label:SetText("Use /zulgaprofiles to manage profiles.")
+    label:SetText("Profiles not implimented yet.")
     group:AddChild(label)
   end
 
